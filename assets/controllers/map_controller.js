@@ -44,33 +44,6 @@ export default class extends Controller {
             buildLocationList(stalls);
         });
 
-        // map.on('click', (event) => {
-        //     /* Determine if a feature in the "locations" layer exists at that point. */
-        //     const features = map.queryRenderedFeatures(event.point, {
-        //         layers: ['locations']
-        //     });
-        //
-        //     /* If it does not exist, return */
-        //     if (!features.length) return;
-        //
-        //     const clickedPoint = features[0];
-        //
-        //     /* Fly to the point */
-        //     flyToStore(clickedPoint);
-        //
-        //     /* Close all other popups and display popup for clicked store */
-        //     createPopUp(clickedPoint);
-        //
-        //     /* Highlight listing in sidebar (and remove highlight for all other listings) */
-        //     const activeItem = document.getElementsByClassName('active');
-        //     if (activeItem[0]) {
-        //         activeItem[0].classList.remove('active');
-        //     }
-        //     const listing = document.getElementById(
-        //         `listing-${clickedPoint.properties.id}`
-        //     );
-        //     listing.classList.add('active');
-        // });
 
         function buildLocationList(stores) {
             for (const store of stores.features) {
@@ -84,10 +57,11 @@ export default class extends Controller {
 
                 /* Add the link to the individual listing created above. */
                 const link = listing.appendChild(document.createElement('a'));
-                link.href = '#';
+                link.href = 'javascript:void(0)';
                 link.className = 'title';
                 link.id = `link-${store.properties.id}`;
                 link.innerHTML = `${store.properties.address}`;
+                link.dataset.turboAction = 'false';
 
                 /* Add details to the individual listing. */
                 const details = listing.appendChild(document.createElement('div'));
@@ -168,28 +142,5 @@ export default class extends Controller {
                 });
             }
         }
-
-
     }
 }
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    // This will run when the document is loaded
-
-    var button = document.querySelector('#toggle-button');
-    var sidebar = document.querySelector('#sidebar');
-
-    button.addEventListener('click', function () {
-        // This will run each time the button is clicked
-
-        // Check if sidebar style is 'block', if so, set it 'none', else set it 'block'
-        if (window.getComputedStyle(sidebar).display === 'none') {
-            sidebar.style.display = 'block';
-            button.innerHTML = "Hide Sidebar";
-        } else {
-            sidebar.style.display = 'none';
-            button.innerHTML = "Show Sidebar";
-        }
-    });
-});
