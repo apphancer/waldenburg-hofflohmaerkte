@@ -55,7 +55,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [0, 0]
+        "coordinates": [12.60170311794260, 50.874403900000000]
       },
       "properties": {
         "address": "Weinkellergasse 6"
@@ -65,7 +65,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [0, 0]
+        "coordinates": [12.618828502455300, 50.871975]
       },
       "properties": {
         "address": "Langenchursdorfer str. 1a"
@@ -75,7 +75,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [0, 0]
+        "coordinates": [12.6132907, 50.8655124]
       },
       "properties": {
         "address": "Pfarrgrund 2"
@@ -85,7 +85,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [0, 0]
+        "coordinates": [12.603093644871800, 50.87352515]
       },
       "properties": {
         "address": "Königsplatz 2"
@@ -95,7 +95,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [0, 0]
+        "coordinates": [12.592708500000000, 50.87713645]
       },
       "properties": {
         "address": "Roter Graben 28"
@@ -105,7 +105,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [0, 0]
+        "coordinates": [12.583748513583300, 50.89171435]
       },
       "properties": {
         "address": "Waldenburger Str. 8"
@@ -115,7 +115,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [0, 0]
+        "coordinates": [12.610212723923000, 50.87242195]
       },
       "properties": {
         "address": "Gartenstraße 2a"
