@@ -2,22 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html, body {
+    height: 100%;
+    margin: 0;
+}
 
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.bg-white.dark\:bg-gray-900 {
+    flex-shrink: 0; /* Section 1 takes its natural height */
+}
+
+#map-container {
+    flex-grow: 1; /* Map container takes up remaining height */
+    display: flex; /* Allow the sidebar and map to be flex children */
+}
+
+
+.map {
+    flex-grow: 1; /* Map takes up the remaining space within the map container */
 }
 
 #toggle-button {
     display: none;
 }
 
-#map-container {
-    position: relative;
-    display: flex;
-}
 
 .sidebar {
     width: 33.3333%;
-    height: 100vh;
+    /*height: 100vh;*/
     overflow: auto;
     border-right: 1px solid rgb(0 0 0 / 25%);
 }

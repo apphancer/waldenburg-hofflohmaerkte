@@ -17,13 +17,17 @@ export default class extends Controller {
             [stalls.features[i], stalls.features[j]] = [stalls.features[j], stalls.features[i]];
         }
 
+        let zoomLevel = window.innerWidth < 1000 ? 13 : 14;
+
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v9',
             center: [12.6035228, 50.874460],
-            zoom: 14,
+            zoom: zoomLevel,
             scrollZoom: false
         });
+
+        map.addControl(new mapboxgl.NavigationControl());
 
         addMarkers();
 

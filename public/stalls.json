@@ -120,6 +120,16 @@
       "properties": {
         "address": "Gartenstraße 2a"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [12.592770, 50.876960]
+      },
+      "properties": {
+        "address": "Roter Graben 30"
+      }
     }
   ]
 }
