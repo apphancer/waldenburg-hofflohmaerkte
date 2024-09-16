@@ -25,4 +25,11 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+    'mapbox-gl' => [
+        'version' => '3.6.0',
+    ],
+    'mapbox-gl/dist/mapbox-gl.min.css' => [
+        'version' => '3.6.0',
+        'type' => 'css',
+    ],
 ];
