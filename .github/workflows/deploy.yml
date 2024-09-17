@@ -1,0 +1,96 @@
+name: Deploy wbhfm
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'
+
+permissions:
+  contents: read
+
+jobs:
+  prepare-deployment:
+    name: Prepare Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        env:
+          APP_ENV: dev
+
+      - name: Lint Container
+        run: bin/console lint:container
+        env:
+          APP_ENV: dev
+
+
+      #
+      #            -   name: Prepare test DB
+      #                run: bin/console doctrine:database:drop --force && bin/console doctrine:database:create && bin/console doctrine:schema:create && bin/console doctrine:fixtures:load --group=assets --no-interaction
+      #                env:
+      #                    APP_ENV: test
+      #
+      #            -   name: PHPUnit
+      #                run: php ./vendor/bin/phpunit --log-junit ~/phpunit/junit.xml
+      #                env:
+      #                    SYMFONY_PHPUNIT_VERSION: 7.5
+      #                    SYMFONY_DEPRECATIONS_HELPER: weak
+
+
+      # Before first deployment, run
+      # git clone
+      # create .env.local
+  deploy:
+    name: Deploy
+    needs: prepare-deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract tag name
+        id: extract_tag
+        run: echo "::set-output name=tag::${GITHUB_REF##*/}"
+        shell: bash
+
+      - name: SSH Actions
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          port: 22
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            export VERSION=${{ steps.extract_tag.outputs.tag }}
+            cd /var/www/wbhfm
+            sudo -u www-data git checkout main
+            sudo -u www-data git pull origin main
+            sudo -u www-data git fetch --tags
+            if ! sudo -u www-data git diff-index --quiet HEAD --; then
+                echo "You have uncommitted changes. Please commit or stash them before switching branches."
+                exit 1
+            fi
+            sudo -u www-data git checkout -f $VERSION
+            chmod +x ./deploy/deploy.sh
+            ./deploy/deploy.sh

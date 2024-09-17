@@ -1,0 +1,19 @@
+services:
+  php:
+    build:
+      context: ..
+      dockerfile: ./deploy/frankenphp/Dockerfile
+    restart: always
+    volumes:
+      - ../:/app
+      - caddy_data:/data
+      - caddy_config:/config
+volumes:
+  caddy_data:
+  caddy_config:
+
+
+networks:
+  default:
+    name: web-server
+    external: true
