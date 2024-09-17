@@ -83,7 +83,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             export VERSION=${{ steps.extract_tag.outputs.tag }}
-            cd /var/www/wbhfm
+            cd /var/www/waldenburghofmarkt
             sudo -u www-data git checkout main
             sudo -u www-data git pull origin main
             sudo -u www-data git fetch --tags
