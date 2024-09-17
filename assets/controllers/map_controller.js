@@ -96,8 +96,8 @@ export default class extends Controller {
                 }
                 this.parentNode.classList.add('active');
 
-                console.log('clicked')
-                controller.sidebar.classList.remove('sidebar-active');
+                const event = new CustomEvent('flyToStoreAndHideList');
+                window.dispatchEvent(event);
             });
         }
     }
