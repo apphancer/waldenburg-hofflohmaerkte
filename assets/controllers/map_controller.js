@@ -3,23 +3,31 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.min.css';
 
 export default class extends Controller {
+
+    stalls;
+    map;
+    sidebar;
+
     async connect() {
+
+        this.sidebar = document.querySelector('#sidebar');
+
         mapboxgl.accessToken = 'pk.eyJ1IjoiYXBwaGFuY2VyIiwiYSI6ImNtMTRxeTFrbjAweXUya3M4OTNiZ3poNzEifQ.4qeiA-a825NQ3QXt5v7vRg';
 
         const response = await fetch('stalls.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const stalls = await response.json();
+        this.stalls = await response.json();
 
-        for (let i = stalls.features.length - 1; i > 0; i--) {
+        for (let i = this.stalls.features.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [stalls.features[i], stalls.features[j]] = [stalls.features[j], stalls.features[i]];
+            [this.stalls.features[i], this.stalls.features[j]] = [this.stalls.features[j], this.stalls.features[i]];
         }
 
         let zoomLevel = window.innerWidth < 1000 ? 13 : 14;
 
-        const map = new mapboxgl.Map({
+        this.map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v9',
             center: [12.6035228, 50.874460],
@@ -27,120 +35,124 @@ export default class extends Controller {
             scrollZoom: false
         });
 
-        map.addControl(new mapboxgl.NavigationControl());
+        this.map.addControl(new mapboxgl.NavigationControl());
 
-        addMarkers();
+        this.addMarkers();
 
-        stalls.features.forEach(function (stall, i) {
+        this.stalls.features.forEach(function (stall, i) {
             stall.properties.id = i;
         });
 
-        map.on('load', () => {
-            map.addSource('places', {
+        this.map.on('load', () => {
+            this.map.addSource('places', {
                 type: 'geojson',
-                data: stalls
+                data: this.stalls
             });
 
-            buildLocationList(stalls);
+            this.buildLocationList();
         });
+    }
 
+    buildLocationList() {
+        let controller = this;
+        for (const stall of this.stalls.features) {
+            /* Add a new listing section to the sidebar. */
+            const listings = document.getElementById('listings');
+            const listing = listings.appendChild(document.createElement('div'));
+            /* Assign a unique `id` to the listing. */
+            listing.id = `listing-${stall.properties.id}`;
+            /* Assign the `item` class to each listing for styling. */
+            listing.className = 'item';
 
-        function buildLocationList(stores) {
-            for (const store of stores.features) {
-                /* Add a new listing section to the sidebar. */
-                const listings = document.getElementById('listings');
-                const listing = listings.appendChild(document.createElement('div'));
-                /* Assign a unique `id` to the listing. */
-                listing.id = `listing-${store.properties.id}`;
-                /* Assign the `item` class to each listing for styling. */
-                listing.className = 'item';
+            /* Add the link to the individual listing created above. */
+            const link = listing.appendChild(document.createElement('a'));
+            link.href = 'javascript:void(0)';
+            link.className = 'title';
+            link.id = `link-${stall.properties.id}`;
+            link.innerHTML = `${stall.properties.address}`;
+            link.dataset.turboAction = 'false';
 
-                /* Add the link to the individual listing created above. */
-                const link = listing.appendChild(document.createElement('a'));
-                link.href = 'javascript:void(0)';
-                link.className = 'title';
-                link.id = `link-${store.properties.id}`;
-                link.innerHTML = `${store.properties.address}`;
-                link.dataset.turboAction = 'false';
-
-                /* Add details to the individual listing. */
-                const details = listing.appendChild(document.createElement('div'));
-                details.innerHTML = ``;
-                if (store.properties.phone) {
-                    details.innerHTML += ` &middot; ${store.properties.phoneFormatted}`;
-                }
-                if (store.properties.distance) {
-                    const roundedDistance = Math.round(store.properties.distance * 100) / 100;
-                    details.innerHTML += `<div><strong>${roundedDistance} miles away</strong></div>`;
-                }
-
-                link.addEventListener('click', function () {
-                    for (const feature of stores.features) {
-                        if (this.id === `link-${feature.properties.id}`) {
-                            flyToStore(feature);
-                            createPopUp(feature);
-                        }
-                    }
-                    const activeItem = document.getElementsByClassName('active');
-                    if (activeItem[0]) {
-                        activeItem[0].classList.remove('active');
-                    }
-                    this.parentNode.classList.add('active');
-                });
+            /* Add details to the individual listing. */
+            const details = listing.appendChild(document.createElement('div'));
+            details.innerHTML = ``;
+            if (stall.properties.phone) {
+                details.innerHTML += ` &middot; ${stall.properties.phoneFormatted}`;
             }
-        }
+            if (stall.properties.distance) {
+                const roundedDistance = Math.round(stall.properties.distance * 100) / 100;
+                details.innerHTML += `<div><strong>${roundedDistance} miles away</strong></div>`;
+            }
 
-        function flyToStore(currentFeature) {
-            map.flyTo({
-                center: currentFeature.geometry.coordinates,
-                zoom: 15
+            link.addEventListener('click', function () {
+                for (const feature of controller.stalls.features) {
+                    if (this.id === `link-${feature.properties.id}`) {
+                        controller.flyToStore(feature);
+                        controller.createPopUp(feature);
+                    }
+                }
+                const activeItem = document.getElementsByClassName('active');
+                if (activeItem[0]) {
+                    activeItem[0].classList.remove('active');
+                }
+                this.parentNode.classList.add('active');
+
+                console.log('clicked')
+                controller.sidebar.classList.remove('sidebar-active');
             });
         }
+    }
 
-        function createPopUp(currentFeature) {
-            const popUps = document.getElementsByClassName('mapboxgl-popup');
-            /** Check if there is already a popup on the map and if so, remove it */
-            if (popUps[0]) popUps[0].remove();
 
-            const popup = new mapboxgl.Popup({ closeOnClick: false })
-                .setLngLat(currentFeature.geometry.coordinates)
-                .setHTML(`<h3>Waldenburger Hofflohmarkt Stand</h3><h4>${currentFeature.properties.address}</h4>`)
-                .addTo(map);
-        }
+    flyToStore(currentFeature) {
+        this.map.flyTo({
+            center: currentFeature.geometry.coordinates,
+            zoom: 15
+        });
+    }
 
-        function addMarkers() {
-            /* For each feature in the GeoJSON object above: */
-            for (const marker of stalls.features) {
-                /* Create a div element for the marker. */
-                const el = document.createElement('div');
-                /* Assign a unique `id` to the marker. */
-                el.id = `marker-${marker.properties.id}`;
-                /* Assign the `marker` class to each marker for styling. */
-                el.className = 'marker';
+    createPopUp(currentFeature) {
+        const popUps = document.getElementsByClassName('mapboxgl-popup');
+        /** Check if there is already a popup on the map and if so, remove it */
+        if (popUps[0]) popUps[0].remove();
 
-                /**
-                 * Create a marker using the div element
-                 * defined above and add it to the map.
-                 **/
-                new mapboxgl.Marker(el, { offset: [0, -23] })
-                    .setLngLat(marker.geometry.coordinates)
-                    .addTo(map);
+        const popup = new mapboxgl.Popup({ closeOnClick: false })
+            .setLngLat(currentFeature.geometry.coordinates)
+            .setHTML(`<h3>Waldenburger Hofflohmarkt Stand</h3><h4>${currentFeature.properties.address}</h4>`)
+            .addTo(this.map);
+    }
 
-                el.addEventListener('click', (e) => {
-                    /* Fly to the point */
-                    flyToStore(marker);
-                    /* Close all other popups and display popup for clicked store */
-                    createPopUp(marker);
-                    /* Highlight listing in sidebar */
-                    const activeItem = document.getElementsByClassName('active');
-                    e.stopPropagation();
-                    if (activeItem[0]) {
-                        activeItem[0].classList.remove('active');
-                    }
-                    const listing = document.getElementById(`listing-${marker.properties.id}`);
-                    listing.classList.add('active');
-                });
-            }
+    addMarkers() {
+        /* For each feature in the GeoJSON object above: */
+        for (const marker of this.stalls.features) {
+            /* Create a div element for the marker. */
+            const el = document.createElement('div');
+            /* Assign a unique `id` to the marker. */
+            el.id = `marker-${marker.properties.id}`;
+            /* Assign the `marker` class to each marker for styling. */
+            el.className = 'marker';
+
+            /**
+             * Create a marker using the div element
+             * defined above and add it to the map.
+             **/
+            new mapboxgl.Marker(el, { offset: [0, -23] })
+                .setLngLat(marker.geometry.coordinates)
+                .addTo(this.map);
+
+            el.addEventListener('click', (e) => {
+                /* Fly to the point */
+                this.flyToStore(marker);
+                /* Close all other popups and display popup for clicked store */
+                this.createPopUp(marker);
+                /* Highlight listing in sidebar */
+                const activeItem = document.getElementsByClassName('active');
+                e.stopPropagation();
+                if (activeItem[0]) {
+                    activeItem[0].classList.remove('active');
+                }
+                const listing = document.getElementById(`listing-${marker.properties.id}`);
+                listing.classList.add('active');
+            });
         }
     }
 }

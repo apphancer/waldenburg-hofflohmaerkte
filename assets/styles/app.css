@@ -17,8 +17,9 @@ body {
 }
 
 #map-container {
-    flex-grow: 1; /* Map container takes up remaining height */
-    display: flex; /* Allow the sidebar and map to be flex children */
+    position: relative; /* Added this line */
+    flex-grow: 1;
+    display: flex;
 }
 
 
@@ -26,16 +27,19 @@ body {
     flex-grow: 1; /* Map takes up the remaining space within the map container */
 }
 
-#toggle-button {
+.map-controls {
     display: none;
 }
 
 
 .sidebar {
     width: 33.3333%;
-    /*height: 100vh;*/
+    height: auto;
     overflow: auto;
     border-right: 1px solid rgb(0 0 0 / 25%);
+    display:block; /* reset display to default */
+    position: relative; /* reset position to default */
+    left: auto; /* reset left to default */
 }
 
 
@@ -44,21 +48,27 @@ body {
 }
 
 @media (max-width: 640px) {
-    #toggle-button {
+    .map-controls {
         display: block;
     }
+
     .sidebar {
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         display: none;
+        position: absolute;
+        left: -100%;
+    }
+
+    #sidebar.sidebar-active {
+        display: block;
+        left: 0;
+        z-index: 10000;
+        background-color: #fff;
     }
 
     .map {
         width: 100%;
-    }
-
-    /* Add this class to the sidebar to show it */
-    .sidebar-active {
-        display: block;
     }
 }
 
