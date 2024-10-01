@@ -184,6 +184,14 @@ body {
     background-image: url('../images/marker.png');
 }
 
+@media (max-width: 640px) {
+    .marker {
+        height: 42px;
+        width: 42px;
+        background-size: 42px 42px;
+    }
+}
+
 .mapboxgl-popup {
     padding-bottom: 50px;
 }
