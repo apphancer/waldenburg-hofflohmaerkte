@@ -51,6 +51,11 @@ export default class extends Controller {
 
             this.buildLocationList();
         });
+
+        this.map.on('click', () => {
+            const popUps = document.getElementsByClassName('mapboxgl-popup');
+            if (popUps[0]) popUps[0].remove();
+        });
     }
 
     buildLocationList() {
