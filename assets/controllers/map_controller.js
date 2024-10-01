@@ -111,7 +111,6 @@ export default class extends Controller {
         /** Check if there is already a popup on the map and if so, remove it */
         if (popUps[0]) popUps[0].remove();
 
-
         let details = `${currentFeature.properties.address}`;
 
         if (currentFeature.properties.information) {
