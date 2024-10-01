@@ -75,12 +75,8 @@ export default class extends Controller {
             /* Add details to the individual listing. */
             const details = listing.appendChild(document.createElement('div'));
             details.innerHTML = ``;
-            if (stall.properties.phone) {
-                details.innerHTML += ` &middot; ${stall.properties.phoneFormatted}`;
-            }
-            if (stall.properties.distance) {
-                const roundedDistance = Math.round(stall.properties.distance * 100) / 100;
-                details.innerHTML += `<div><strong>${roundedDistance} miles away</strong></div>`;
+            if (stall.properties.information) {
+                details.innerHTML += `${stall.properties.information}`;
             }
 
             link.addEventListener('click', function () {
@@ -115,9 +111,16 @@ export default class extends Controller {
         /** Check if there is already a popup on the map and if so, remove it */
         if (popUps[0]) popUps[0].remove();
 
+
+        let details = `${currentFeature.properties.address}`;
+
+        if (currentFeature.properties.information) {
+            details += `<br><br><strong>${currentFeature.properties.information}</strong>`;
+        }
+
         const popup = new mapboxgl.Popup({ closeOnClick: false })
             .setLngLat(currentFeature.geometry.coordinates)
-            .setHTML(`<h3>Waldenburger Hofflohmarkt Stand</h3><h4>${currentFeature.properties.address}</h4>`)
+            .setHTML(`<h3>Waldenburger Hofflohmarkt Stand</h3><h4>${details}</h4>`)
             .addTo(this.map);
     }
 
