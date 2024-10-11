@@ -16,6 +16,10 @@ body {
     flex-shrink: 0; /* Section 1 takes its natural height */
 }
 
+.bg-header {
+    background-image: url('../images/header-scaled-1.jpg');
+}
+
 #map-container {
     position: relative; /* Added this line */
     flex-grow: 1;
