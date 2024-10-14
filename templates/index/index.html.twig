@@ -60,11 +60,9 @@
         </div>
     </section>
 
-
-
-
-
-    <section {{ stimulus_controller('map') }} id="map-container" class="flex-grow flex">
+    <section {{ stimulus_controller('map', {
+        'icon' : asset('images/marker.png')
+    }) }} id="map-container" class="flex-grow flex">
         <div class="sidebar" id="sidebar">
             <div id="listings" class="listings"></div>
         </div>
