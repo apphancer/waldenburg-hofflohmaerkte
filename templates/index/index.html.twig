@@ -27,7 +27,7 @@
         <div class="px-4 map-controls" {{ stimulus_controller('map-controls') }}>
             <button {{ stimulus_action('map-controls', 'showList') }} {{ stimulus_target('map-controls', 'showListBtn') }}
                     type="button"
-                    class="inline-flex justify-center items-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                    class="inline-flex justify-center items-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-xs px-3 py-1.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                      class="mr-2 -mr-1 w-5 h-5">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -44,7 +44,7 @@
 
             <button {{ stimulus_target('map-controls', 'hideListBtn') }} data-action="map-controls#hideList flyToStoreAndHideList@window->map-controls#hideList"
                                                                          type="button"
-                                                                         class="hidden inline-flex justify-center items-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                                                                         class="hidden inline-flex justify-center items-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-xs px-3 py-1.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                      class="mr-2 -mr-1 w-5 h-5">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -68,5 +68,9 @@
         </div>
         <div id="map" class="map flex-grow"></div>
     </section>
+
+    <footer class="text-right text-xs sm:text-xxs mb-[-20px] sm:mb-[0]">
+        <a href="https://www.apphancer.com" target="_blank" class="px-2 py-1"> Web app crafted by Martin Sarsini 💛</a>
+    </footer>
 
 {% endblock %}
