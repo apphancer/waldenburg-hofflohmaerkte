@@ -155,6 +155,11 @@ export default class extends Controller {
             this.buildLocationList();
         });
 
+
+        setTimeout(() => {
+            this.map.getSource('places').setData(this.stalls);
+        }, 900);
+
         this.map.on('click', () => {
             const popUps = document.getElementsByClassName('mapboxgl-popup');
             if (popUps[0]) popUps[0].remove();
