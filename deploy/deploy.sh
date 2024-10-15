@@ -46,3 +46,8 @@ grep -v "${CONTAINER_NAME}-${VERSION}-php-1" |
 awk -F":" '{print $1}' |
 xargs -n1 docker stop |
 xargs -n1 docker rm
+
+# Remove all unused containers, networks, images, and volumes
+docker system prune --volumes -f
+docker volume ls -qf dangling=true | xargs -r docker volume rm
+docker image prune -a -f
