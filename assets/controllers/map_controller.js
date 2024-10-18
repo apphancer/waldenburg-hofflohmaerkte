@@ -77,7 +77,7 @@ export default class extends Controller {
                 type: 'geojson',
                 data: this.stalls,
                 cluster: true,
-                clusterMaxZoom: 16,
+                clusterMaxZoom: 17,
                 clusterRadius: 50
             });
 
@@ -209,9 +209,11 @@ export default class extends Controller {
 
 
     flyToStore(currentFeature) {
+        const currentZoom = this.map.getZoom();
+
         this.map.flyTo({
             center: currentFeature.geometry.coordinates,
-            zoom: 15
+            zoom: currentZoom < 16 ? 16 : currentZoom
         });
     }
 
