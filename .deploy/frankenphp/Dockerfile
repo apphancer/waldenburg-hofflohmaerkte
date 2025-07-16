@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:1.7-php8.4-bookworm
 
 ENV SERVER_NAME=waldenburghofmarkt.kleinodd.de:80
 
