@@ -15,7 +15,10 @@ class Stall
     private ?int $id = null;
 
     #[ORM\Column(type: Types::GUID)]
-    private ?string $uuid = null;
+    private ?string $publicUuid = null;
+
+    #[ORM\Column(type: Types::GUID)]
+    private ?string $privateUuid = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
@@ -46,14 +49,14 @@ class Stall
         return $this->id;
     }
 
-    public function getUuid(): ?string
+    public function getPublicUuid(): ?string
     {
-        return $this->uuid;
+        return $this->publicUuid;
     }
 
-    public function setUuid(string $uuid): static
+    public function setPublicUuid(string $publicUuid): static
     {
-        $this->uuid = $uuid;
+        $this->publicUuid = $publicUuid;
 
         return $this;
     }
@@ -150,6 +153,18 @@ class Stall
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPrivateUuid(): ?string
+    {
+        return $this->privateUuid;
+    }
+
+    public function setPrivateUuid(string $privateUuid): static
+    {
+        $this->privateUuid = $privateUuid;
 
         return $this;
     }

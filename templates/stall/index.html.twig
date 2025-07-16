@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <section class="bg-gray-50 dark:bg-gray-900">
+        <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12">
+            <div class="w-full p-6 mx-auto bg-white rounded-lg shadow dark:bg-gray-800 sm:max-w-xl lg:col-span-6 sm:p-8">
+                <a href="#" class="inline-flex items-center mb-4 text-xl font-semibold text-gray-900 dark:text-white">
+                    <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
+                    Flowbite
+                </a>
+                <h1 class="mb-2 text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
+                    Create your Account
+                </h1>
+                <p class="text-sm font-light text-gray-500 dark:text-gray-300">
+                    Start your website in seconds. Already have an account? <a href="#" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>.
+                </p>
+
+                {{ form_start(form, {'attr': {'class': 'mt-4 space-y-6 sm:mt-6'}}) }}
+
+                <div class="grid gap-6 sm:grid-cols-2">
+                    {{ form_row(form.fullName) }}
+                    {{ form_row(form.email) }}
+                </div>
+
+                {{ form_row(form.stallNumber) }}
+                {{ form_row(form.address) }}
+                {{ form_row(form.information) }}
+                {{ form_row(form.comments) }}
+
+                <div class="flex items-center">
+                    <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="px-5 text-center text-gray-500 dark:text-gray-400"> +</div>
+                    <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                </div>
+
+                {{ form_row(form.agreeTerms) }}
+
+                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Register</button>
+
+
+                {{ form_end(form) }}
+            </div>
+            <div class="mr-auto place-self-center lg:col-span-6">
+                <img class="hidden mx-auto lg:flex" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/authentication/illustration.svg" alt="illustration">
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}
