@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/dbal": "^3",
@@ -42,11 +42,14 @@
         "symfony/validator": "7.1.*",
         "symfony/web-link": "7.1.*",
         "symfony/yaml": "7.1.*",
-        "symfonycasts/tailwind-bundle": "^0.6.0",
+        "symfonycasts/tailwind-bundle": "^0.10",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
     },
     "config": {
+        "platform": {
+            "php": "8.4"
+        },
         "allow-plugins": {
             "php-http/discovery": true,
             "symfony/flex": true,
