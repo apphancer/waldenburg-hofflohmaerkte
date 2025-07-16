@@ -5,7 +5,8 @@ import 'mapbox-gl/dist/mapbox-gl.min.css';
 export default class extends Controller {
 
     static values = {
-        icon: String
+        icon: String,
+        token: String
     }
 
 
@@ -17,7 +18,7 @@ export default class extends Controller {
 
         this.sidebar = document.querySelector('#sidebar');
 
-        mapboxgl.accessToken = 'pk.eyJ1IjoiYXBwaGFuY2VyIiwiYSI6ImNtMTRxeTFrbjAweXUya3M4OTNiZ3poNzEifQ.4qeiA-a825NQ3QXt5v7vRg';
+        mapboxgl.accessToken = this.tokenValue;
 
 
         const response = await fetch('stalls.json');
