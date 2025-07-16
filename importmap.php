@@ -32,4 +32,19 @@ return [
         'version' => '3.6.0',
         'type' => 'css',
     ],
+    '@googlemaps/js-api-loader' => [
+        'version' => '1.16.10',
+    ],
+    '@googlemaps/markerclusterer' => [
+        'version' => '2.6.2',
+    ],
+    'fast-equals' => [
+        'version' => '5.2.2',
+    ],
+    'supercluster' => [
+        'version' => '8.0.1',
+    ],
+    'kdbush' => [
+        'version' => '4.0.2',
+    ],
 ];
