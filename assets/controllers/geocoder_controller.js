@@ -7,9 +7,10 @@ export default class extends Controller {
     static values = {
         apiKey: String,
         geoCoderPlaceholder: String,
+        hasExistingAddress: Boolean,
     }
 
-    static targets = ['geocoder', 'result'];
+    static targets = ['geocoder', 'result', 'existingAddress'];
 
     autocomplete;
     google;
@@ -18,10 +19,17 @@ export default class extends Controller {
         await this.initializeGoogleMaps();
         await this.setupPlaceAutocomplete();
         this.setupEventListeners();
+        this.handleExistingData();
 
         /* start: hack required for placeholder */
         this.placeholderSetup();
         /* end: hack required for placeholder */
+    }
+
+    changeAddress(e) {
+        e.preventDefault();
+        this.geocoderTarget.classList.remove('hidden');
+        this.existingAddressTarget.classList.add('hidden');
     }
 
     async initializeGoogleMaps() {
@@ -72,6 +80,12 @@ export default class extends Controller {
 
         this.placeholderHideOverlay()
 
+    }
+
+    handleExistingData() {
+        if(this.hasExistingAddressValue) {
+            this.geocoderTarget.classList.add('hidden');
+        }
     }
 
     placeholderSetup() {

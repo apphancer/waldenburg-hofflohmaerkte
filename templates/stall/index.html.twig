@@ -26,12 +26,22 @@
                     {{ form_row(form.email) }}
                 </div>
 
+                {% set hasExistingAddress = address is not null and address.formattedAddress is defined %}
+
                 <div class="form-control" {{ stimulus_controller('geocoder', {
                     apiKey: google_maps_api_key,
-                    geoCoderPlaceholder: 'Adresse eingeben...'
+                    geoCoderPlaceholder: 'Adresse eingeben...',
+                    hasExistingAddress: hasExistingAddress
                 }) }} data-search-target="geocoderContainer" data-search-target="geocoderContainer">
 
                     <div class="geocoder" data-geocoder-target="geocoder"></div>
+
+                    {% if hasExistingAddress %}
+                        <div class="geocoder" data-geocoder-target="existingAddress">
+                            <p>{{ address.formattedAddress }}</p>
+                            <a href="#" {{ stimulus_action('geocoder', 'changeAddress') }} class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Ändern</a>
+                        </div>
+                    {% endif %}
 
                     {{ form_widget(form.address, { 'attr' : {
                         'data-geocoder-target' : 'result',
@@ -62,6 +72,4 @@
             </div>
         </div>
     </section>
-
-
 {% endblock %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Stall;
 use App\Form\StallType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ final class StallController extends AbstractController
     }
 
     #[Route('/stall/create', name: 'app_stall_create')]
-    public function index(Request $request): Response
+    public function create(Request $request): Response
     {
         $stall = new Stall();
 
@@ -37,12 +38,42 @@ final class StallController extends AbstractController
 
             $this->addFlash('success', 'Your stall registration has been submitted successfully!');
 
-            return $this->redirectToRoute('app_stall_create');
+            return $this->redirectToRoute('app_stall_edit', ['uuid' => $stall->getPrivateUuid()]); // @todo[m]:
         }
-
 
         return $this->render('stall/index.html.twig', [
             'form' => $form,
+            'address' => null
+        ]);
+    }
+
+    #[Route('/stall/{uuid}/edit', name: 'app_stall_edit')]
+    public function edit(
+        Request $request,
+        #[MapEntity(mapping: ['uuid' => 'privateUuid'])] Stall $stall
+    ): Response
+    {
+        $form = $this->createForm(StallType::class, $stall);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $stall
+                ->setUpdatedAt(new \DateTimeImmutable());
+
+            $this->em->persist($stall);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Your stall registration has been updated successfully!');
+
+            return $this->redirectToRoute('app_stall_edit', ['uuid' => $stall->getPrivateUuid()]);
+        }
+
+
+        dump($stall->getAddress());
+
+        return $this->render('stall/index.html.twig', [
+            'form' => $form,
+            'address' => $stall->getAddress()
         ]);
     }
 }
