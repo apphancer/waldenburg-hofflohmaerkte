@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Stall;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -67,8 +68,7 @@ class StallType extends AbstractType
                     'min' => 1,
                 ],
             ])
-            ->add('location', HiddenType::class, [
-                'mapped'      => false,
+            ->add('address', HiddenType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Location data is required',
@@ -77,18 +77,7 @@ class StallType extends AbstractType
                         'callback' => [$this, 'validateLocationData'],
                     ]),
                 ],
-            ])
-            ->add('address', CollectionType::class, [
-                'entry_type'    => TextType::class,
-                'allow_add'     => true,
-                'prototype'     => true,
-                'entry_options' => [
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => 'Please enter an address',
-                        ]),
-                    ],
-                ],
+                'error_bubbling' => false,
             ])
             ->add('comments', TextareaType::class, [
                 'label'    => 'Kommentare',
@@ -107,6 +96,21 @@ class StallType extends AbstractType
                 'label'       => 'I agree to the terms of service and privacy policy',
                 'required'    => true,
             ]);
+
+        $builder->get('address')->addModelTransformer(new CallbackTransformer(
+            function ($addressArray) {
+                if (empty($addressArray)) {
+                    return '';
+                }
+                return json_encode($addressArray);
+            },
+            function ($addressJson) {
+                if (empty($addressJson)) {
+                    return [];
+                }
+                return json_decode($addressJson, true);
+            }
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -116,23 +120,24 @@ class StallType extends AbstractType
         ]);
     }
 
-    public function validateLocationData(?string $value, ExecutionContextInterface $context): void
+    public function validateLocationData(null|string|array $value, ExecutionContextInterface $context): void
     {
         if ($value === null) {
             return;
         }
 
-        $data = json_decode($value, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        $data = is_array($value) ? $value : json_decode($value, true);
+
+        if (!is_array($value) && json_last_error() !== JSON_ERROR_NONE) {
             $context->buildViolation('Location must be in valid JSON format')
                 ->addViolation();
-
             return;
         }
 
         $this->validateRequiredFields($data, $context);
         $this->validateCoordinates($data, $context);
         $this->validateAddressComponents($data, $context);
+
     }
 
 
@@ -154,7 +159,7 @@ class StallType extends AbstractType
                 ->addViolation();
         }
     }
-    
+
     private function validateAddressComponents(array $data, ExecutionContextInterface $context): void
     {
         if (!isset($data['addressComponents']) || !is_array($data['addressComponents'])) {

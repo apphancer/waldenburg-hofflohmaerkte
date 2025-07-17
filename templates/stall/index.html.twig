@@ -19,29 +19,26 @@
 
                 {{ form_start(form, {'attr': {'class': 'mt-4 space-y-6 sm:mt-6', 'novalidate': 'novalidate'}}) }}
 
+                {{ form_errors(form) }}
 
                 <div class="grid gap-6 sm:grid-cols-2">
                     {{ form_row(form.fullName) }}
                     {{ form_row(form.email) }}
                 </div>
 
-
-                {{ form_row(form.address) }}
-
-                <div class="form-control chirulao" {{ stimulus_controller('geocoder', {
+                <div class="form-control" {{ stimulus_controller('geocoder', {
                     apiKey: google_maps_api_key,
                     geoCoderPlaceholder: 'Adresse eingeben...'
                 }) }} data-search-target="geocoderContainer" data-search-target="geocoderContainer">
 
                     <div class="geocoder" data-geocoder-target="geocoder"></div>
 
-                    {{ form_widget(form.location, { 'attr' : {
+                    {{ form_widget(form.address, { 'attr' : {
                         'data-geocoder-target' : 'result',
                         'data-search-target' : 'result',
                     } }) }}
-                    {{ form_errors(form.location) }}
+                    {{ form_errors(form.address) }}
                 </div>
-
 
                 {{ form_row(form.stallNumber) }}
                 {{ form_row(form.information) }}
