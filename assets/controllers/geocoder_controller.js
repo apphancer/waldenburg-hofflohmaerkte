@@ -25,14 +25,21 @@ export default class extends Controller {
 
         });
 
-
-
         this.google = await loader.load();
         await google.maps.importLibrary("places");
 
+        const center = new google.maps.LatLng(50.874460, 12.6035228);
+        const radiusMeters = 5000; // 5 km radius
+
+        const circle = new google.maps.Circle({
+            center: center,
+            radius: radiusMeters,
+        });
+
         // Create input element for autocomplete
         this.autocomplete = new google.maps.places.PlaceAutocompleteElement({
-            includedRegionCodes: ['de'], // @todo[m]: check  https://developers.google.com/maps/documentation/javascript/place-autocomplete-new
+            includedRegionCodes: ['de'],
+            locationRestriction: circle.getBounds()
         });
         const container = document.createElement('div');
         container.classList.add('geocoder-container');
@@ -46,24 +53,6 @@ export default class extends Controller {
             console.log('place', place);
             controller.resultTarget.value = JSON.stringify(place, null, 2);
         });
-
-
-        // const cityCenter = new this.google.maps.LatLng(50.874460, 12.6035228);
-        //
-        // const cityBounds = new this.google.maps.Circle({
-        //     center: cityCenter,
-        //     radius: 5000 // radius in meters (20km)
-        // }).getBounds();
-
-        // this.autocomplete = new this.google.maps.places.Autocomplete(input, {
-        //     types: ['geocode'],
-        //     componentRestrictions: {country: 'de'},
-        //     bounds: cityBounds,
-        //     strictBounds: true
-        // });
-
-        // this.autocomplete.componentRestrictions = { country: ['de'] };
-
 
         // Initialize Geocoder service
         this.geocoder = new this.google.maps.Geocoder();
