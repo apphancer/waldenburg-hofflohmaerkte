@@ -18,6 +18,10 @@ export default class extends Controller {
         await this.initializeGoogleMaps();
         await this.setupPlaceAutocomplete();
         this.setupEventListeners();
+
+        /* start: hack required for placeholder */
+        this.placeholderSetup();
+        /* end: hack required for placeholder */
     }
 
     async initializeGoogleMaps() {
@@ -65,5 +69,60 @@ export default class extends Controller {
             fields: ['displayName', 'formattedAddress', 'location', 'addressComponents']
         });
         this.resultTarget.value = JSON.stringify(place, null, 2);
+
+        this.placeholderHideOverlay()
+
+    }
+
+    placeholderSetup() {
+        this.placeholderCheckInitialValueAndHideOverlay();
+        this.placeholderSetupOverlayClickEvents();
+        this.placeholderSetupDocumentClickEvent();
+    }
+
+    placeholderCheckInitialValueAndHideOverlay() {
+        this.geocoderTarget.style.setProperty('--overlay-text', `"${this.geoCoderPlaceholderValue}"`);
+
+        if (this.resultTarget.value && this.resultTarget.value.trim() !== '') {
+            this.placeholderHideOverlay();
+        }
+    }
+
+    placeholderSetupOverlayClickEvents() {
+        this.geocoderTarget.addEventListener('click', () => {
+            this.placeholderHideOverlay();
+        });
+    }
+
+    placeholderSetupDocumentClickEvent() {
+        document.addEventListener('click', (event) => {
+            if (!this.geocoderTarget.contains(event.target)) {
+                this.placeholderHandleOutsideClick();
+            }
+        });
+    }
+
+    placeholderHandleOutsideClick() {
+        const input = this.geocoderTarget.querySelector('gmp-place-autocomplete');
+        const shadowRoot = input?.shadowRoot;
+        const shadowInput = shadowRoot?.querySelector('input');
+
+        if (this.placeholderShouldShowOverlay(shadowInput)) {
+            this.placeholderShowOverlay();
+        }
+    }
+
+    placeholderShouldShowOverlay(shadowInput) {
+        const noInputValue = !shadowInput || !shadowInput.value;
+        const noResultValue = !this.resultTarget.value || this.resultTarget.value.trim() === '';
+        return noInputValue && noResultValue;
+    }
+
+    placeholderHideOverlay() {
+        this.geocoderTarget.style.setProperty('--show-overlay', 'none');
+    }
+
+    placeholderShowOverlay() {
+        this.geocoderTarget.style.setProperty('--show-overlay', 'block');
     }
 }
