@@ -19,43 +19,51 @@ export default class extends Controller {
     async connect() {
         let controller = this;
 
-        console.log(this.geocoderTarget);
-        console.log(this.resultTarget);
-
         const loader = new Loader({
             apiKey: this.apiKeyValue,
             version: 'weekly',
-            libraries: ['places']
+
         });
+
+
 
         this.google = await loader.load();
+        await google.maps.importLibrary("places");
 
         // Create input element for autocomplete
-        const input = document.createElement('input');
-        input.setAttribute('type', 'text');
-        input.setAttribute('placeholder', this.geoCoderPlaceholderValue);
-        input.classList.add('geocoder-input');
-
-        // Create container for geocoder
+        this.autocomplete = new google.maps.places.PlaceAutocompleteElement({
+            includedRegionCodes: ['de'], // @todo[m]: check  https://developers.google.com/maps/documentation/javascript/place-autocomplete-new
+        });
         const container = document.createElement('div');
         container.classList.add('geocoder-container');
-        container.appendChild(input);
-
+        container.appendChild(this.autocomplete);
         this.geocoderTarget.appendChild(container);
 
-        const cityCenter = new this.google.maps.LatLng(50.874460, 12.6035228);
+        this.autocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+            const place = placePrediction.toPlace();
+            await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location', 'addressComponents'] });
 
-        const cityBounds = new this.google.maps.Circle({
-            center: cityCenter,
-            radius: 5000 // radius in meters (20km)
-        }).getBounds();
-
-        this.autocomplete = new this.google.maps.places.Autocomplete(input, {
-            types: ['geocode'],
-            componentRestrictions: {country: 'de'},
-            bounds: cityBounds,
-            strictBounds: true
+            console.log('place', place);
+            controller.resultTarget.value = JSON.stringify(place, null, 2);
         });
+
+
+        // const cityCenter = new this.google.maps.LatLng(50.874460, 12.6035228);
+        //
+        // const cityBounds = new this.google.maps.Circle({
+        //     center: cityCenter,
+        //     radius: 5000 // radius in meters (20km)
+        // }).getBounds();
+
+        // this.autocomplete = new this.google.maps.places.Autocomplete(input, {
+        //     types: ['geocode'],
+        //     componentRestrictions: {country: 'de'},
+        //     bounds: cityBounds,
+        //     strictBounds: true
+        // });
+
+        // this.autocomplete.componentRestrictions = { country: ['de'] };
+
 
         // Initialize Geocoder service
         this.geocoder = new this.google.maps.Geocoder();
@@ -81,34 +89,6 @@ export default class extends Controller {
             input.dispatchEvent(event);
         });
 
-        // Handle place selection
-        this.autocomplete.addListener('place_changed', () => {
-            const place = this.autocomplete.getPlace();
-
-            if (!place.geometry) {
-                // User entered the name of a Place that was not suggested
-                return;
-            }
-
-            // Format the result similar to Mapbox's result format for compatibility
-            const result = {
-                id: place.place_id,
-                place_name: place.formatted_address,
-                geometry: {
-                    type: 'Point',
-                    coordinates: [
-                        place.geometry.location.lng(),
-                        place.geometry.location.lat()
-                    ]
-                },
-                properties: {
-                    address: place.formatted_address
-                },
-                address_components: place.address_components
-            };
-
-            controller.resultTarget.value = JSON.stringify(result, null, 2);
-        });
 
         // Add custom styling
         this.styleGeocoder();
