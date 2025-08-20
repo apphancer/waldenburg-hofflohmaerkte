@@ -6,16 +6,26 @@
     <section class="bg-gray-50 dark:bg-gray-900">
         <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12">
             <div class="w-full p-6 mx-auto bg-white rounded-lg shadow dark:bg-gray-800 sm:max-w-xl lg:col-span-6 sm:p-8">
-                <a href="#" class="inline-flex items-center mb-4 text-xl font-semibold text-gray-900 dark:text-white">
-                    <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
-                    Flowbite
-                </a>
+
                 <h1 class="mb-2 text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
-                    Create your Account
+                    Waldenburger Hofflohmärkte
                 </h1>
-                <p class="text-sm font-light text-gray-500 dark:text-gray-300">
-                    Start your website in seconds. Already have an account? <a href="#" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>.
+
+                <p class="text-sm">
+                    <a href="{{ path('index') }}" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                        <svg class="w-5 h-5 me-0 text-blue-600 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14 8-4 4 4 4"/>
+                        </svg>
+                        Back to list of stalls
+                    </a>
                 </p>
+
+
+                {% if isNew %}
+                    <p class=" font-light text-gray-500 dark:text-gray-300">
+                        Start your website in seconds. Lorem Ipsum
+                    </p>
+                {% endif %}
 
                 {{ form_start(form, {'attr': {'class': 'mt-4 space-y-6 sm:mt-6', 'novalidate': 'novalidate'}}) }}
 
@@ -50,7 +60,8 @@
                     {{ form_errors(form.address) }}
                 </div>
 
-                {{ form_row(form.stallNumber) }}
+                {{ form_row(form.stallNumber, {'attr': {'class': 'w-24'}}) }}
+
                 {{ form_row(form.information) }}
                 {{ form_row(form.comments) }}
 

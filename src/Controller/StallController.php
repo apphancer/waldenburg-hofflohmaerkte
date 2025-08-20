@@ -39,12 +39,13 @@ final class StallController extends AbstractController
 
             $this->addFlash('success', 'Your stall registration has been submitted successfully!');
 
-            return $this->redirectToRoute('app_stall_edit', ['uuid' => $stall->getPrivateUuid()]); // @todo[m]:
+            return $this->redirectToRoute('app_stall_success', ['uuid' => $stall->getPrivateUuid()]);
         }
 
         return $this->render('stall/index.html.twig', [
-            'form' => $form,
-            'address' => null
+            'isNew'   => true,
+            'form'    => $form,
+            'address' => null,
         ]);
     }
 
@@ -52,8 +53,7 @@ final class StallController extends AbstractController
     public function success(
         Request $request,
         #[MapEntity(mapping: ['uuid' => 'privateUuid'])] Stall $stall
-    ): Response
-    {
+    ): Response {
         return $this->render('stall/success.html.twig', [
             'stall' => $stall,
         ]);
@@ -63,8 +63,7 @@ final class StallController extends AbstractController
     public function edit(
         Request $request,
         #[MapEntity(mapping: ['uuid' => 'privateUuid'])] Stall $stall
-    ): Response
-    {
+    ): Response {
         $form = $this->createForm(StallType::class, $stall);
         $form->handleRequest($request);
 
@@ -78,15 +77,13 @@ final class StallController extends AbstractController
 
             $this->addFlash('success', 'Your stall registration has been updated successfully!');
 
-            return $this->redirectToRoute('app_stall_edit', ['uuid' => $stall->getPrivateUuid()]);
+            return $this->redirectToRoute('app_stall_success', ['uuid' => $stall->getPrivateUuid()]);
         }
 
-
-        dump($stall->getAddress());
-
         return $this->render('stall/index.html.twig', [
-            'form' => $form,
-            'address' => $stall->getAddress()
+            'isNew'   => false,
+            'form'    => $form,
+            'address' => $stall->getAddress(),
         ]);
     }
 }
