@@ -31,7 +31,8 @@ final class StallController extends AbstractController
             $stall
                 ->setPublicUuid(new Ulid()->toBase32())
                 ->setPrivateUuid(new Ulid()->toBase32())
-                ->setCreatedAt(new \DateTimeImmutable());
+                ->setCreatedAt(new \DateTimeImmutable())
+                ->setIsPublished(false);
 
             $this->em->persist($stall);
             $this->em->flush();
@@ -47,6 +48,17 @@ final class StallController extends AbstractController
         ]);
     }
 
+    #[Route('/stall/{uuid}/success', name: 'app_stall_success')]
+    public function success(
+        Request $request,
+        #[MapEntity(mapping: ['uuid' => 'privateUuid'])] Stall $stall
+    ): Response
+    {
+        return $this->render('stall/success.html.twig', [
+            'stall' => $stall,
+        ]);
+    }
+
     #[Route('/stall/{uuid}/edit', name: 'app_stall_edit')]
     public function edit(
         Request $request,
@@ -58,7 +70,8 @@ final class StallController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $stall
-                ->setUpdatedAt(new \DateTimeImmutable());
+                ->setUpdatedAt(new \DateTimeImmutable())
+                ->setIsPublished(false);
 
             $this->em->persist($stall);
             $this->em->flush();

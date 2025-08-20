@@ -44,6 +44,9 @@ class Stall
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column]
+    private ?bool $isPublished = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +168,18 @@ class Stall
     public function setPrivateUuid(string $privateUuid): static
     {
         $this->privateUuid = $privateUuid;
+
+        return $this;
+    }
+
+    public function isPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
 
         return $this;
     }
