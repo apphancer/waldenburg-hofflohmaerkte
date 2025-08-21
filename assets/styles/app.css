@@ -221,3 +221,19 @@ gmp-place-autocomplete {
     display: var(--show-overlay);
 }
 /* end: hack required for placeholder */
+
+
+h1 {
+    font-family: "Fredoka", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+
+
+    text-transform: uppercase;
+    background: #57068B;
+    background: linear-gradient(to bottom right, #57068B 0%, #8911A7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
