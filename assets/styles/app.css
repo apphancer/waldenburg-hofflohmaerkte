@@ -264,13 +264,15 @@ h1 {
     font-weight: 500;
     font-style: normal;
     font-variation-settings: "wdth" 100;
-
-
     text-transform: uppercase;
     background: #57068B;
     background: linear-gradient(to bottom right, #57068B 0%, #A7118F 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.item a {
+    font-size: 1.25rem;
 }
 
 .gradient-button {
