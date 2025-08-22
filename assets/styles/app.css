@@ -23,8 +23,42 @@ body {
 }
 
 .bg-header {
-    background-image: url('../images/header-scaled-1.jpg');
+    position: relative;
+    overflow: hidden;
 }
+
+.bg-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 800 600' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23F6EAF9'%3E%3Canimate attributeName='stop-color' values='%23F6EAF9;%23E6F5FE;%23D4C1EC;%23F6EAF9' dur='4s' repeatCount='indefinite'/%3E%3C/stop%3E%3Cstop offset='50%25' stop-color='%23E6F5FE'%3E%3Canimate attributeName='stop-color' values='%23E6F5FE;%23D4C1EC;%23F6EAF9;%23E6F5FE' dur='4s' repeatCount='indefinite'/%3E%3C/stop%3E%3Cstop offset='100%25' stop-color='%23D4C1EC'%3E%3Canimate attributeName='stop-color' values='%23D4C1EC;%23F6EAF9;%23E6F5FE;%23D4C1EC' dur='4s' repeatCount='indefinite'/%3E%3C/stop%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='600' fill='url(%23grad)'%3E%3Canimate attributeName='opacity' values='0.85;1;0.85' dur='3s' repeatCount='indefinite'/%3E%3C/rect%3E%3C/svg%3E");
+    background-size: cover;
+    background-position: center;
+}
+
+
+.bg-animated {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-animated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 800 600' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23F6EAF9'%3E%3Canimate attributeName='stop-color' values='%23F6EAF9;%23E6F5FE;%23D4C1EC;%23F6EAF9' dur='4s' repeatCount='indefinite'/%3E%3C/stop%3E%3Cstop offset='50%25' stop-color='%23E6F5FE'%3E%3Canimate attributeName='stop-color' values='%23E6F5FE;%23D4C1EC;%23F6EAF9;%23E6F5FE' dur='4s' repeatCount='indefinite'/%3E%3C/stop%3E%3Cstop offset='100%25' stop-color='%23D4C1EC'%3E%3Canimate attributeName='stop-color' values='%23D4C1EC;%23F6EAF9;%23E6F5FE;%23D4C1EC' dur='4s' repeatCount='indefinite'/%3E%3C/stop%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='600' fill='url(%23grad)'%3E%3Canimate attributeName='opacity' values='0.85;1;0.85' dur='3s' repeatCount='indefinite'/%3E%3C/rect%3E%3C/svg%3E");
+    background-size: cover;
+    background-position: center;
+}
+
 
 #map-container {
     position: relative; /* Added this line */
@@ -150,6 +184,7 @@ body {
     display: none;
 }
 
+
 .mapboxgl-popup-content {
     font:
             400 15px/22px 'Source Sans Pro',
@@ -233,7 +268,14 @@ h1 {
 
     text-transform: uppercase;
     background: #57068B;
-    background: linear-gradient(to bottom right, #57068B 0%, #8911A7 100%);
+    background: linear-gradient(to bottom right, #57068B 0%, #A7118F 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.gradient-button {
+    color: #112A46;
+    text-transform: uppercase;
+    background: #43E8BE;
+    background: linear-gradient(90deg,rgba(67, 232, 190, 1) 0%, rgba(67, 232, 190, 1) 0%, rgba(113, 226, 162, 1) 100%);
 }

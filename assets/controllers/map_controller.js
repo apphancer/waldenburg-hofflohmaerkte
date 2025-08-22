@@ -4,7 +4,6 @@ import {MarkerClusterer} from '@googlemaps/markerclusterer';
 
 export default class extends Controller {
     static values = {
-        icon: String,
         apiKey: String
     }
 
@@ -60,7 +59,16 @@ export default class extends Controller {
             center: center,
             zoom: zoomLevel,
             gestureHandling: 'cooperative',
-            mapTypeControl: false
+            mapTypeControl: false,
+            styles: [
+                {
+                    featureType: "landscape.natural",
+                    elementType: "geometry.fill",
+                    stylers: [
+                        {color: "#D0F9EF"}
+                    ]
+                }
+            ]
         });
 
         const controlDiv = document.createElement('div');
@@ -129,8 +137,14 @@ export default class extends Controller {
             const marker = new this.google.maps.Marker({
                 position: position,
                 map: this.map,
-                icon: this.iconValue,
-                title: stall.properties.address
+                title: stall.properties.address,
+                icon: {
+                    url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='44' viewBox='0 0 384 512'%3E%3Cpath fill='%23D114B3' d='M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z'/%3E%3C/svg%3E",
+                    scaledSize: new this.google.maps.Size(32, 44),
+                    anchor: new this.google.maps.Point(16, 44)
+
+                }
+
             });
 
             marker.properties = stall.properties;
@@ -157,7 +171,7 @@ export default class extends Controller {
                         },
                         icon: {
                             path: this.google.maps.SymbolPath.CIRCLE,
-                            fillColor: count < 100 ? '#00BCD4' : count < 750 ? '#2196F3' : '#3F51B5',
+                            fillColor: count < 100 ? '#A7118F' : count < 750 ? '#2196F3' : '#3F51B5',
                             fillOpacity: 0.9,
                             scale: count < 100 ? 20 : count < 750 ? 30 : 40,
                             strokeWeight: 1,
