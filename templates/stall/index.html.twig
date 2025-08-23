@@ -6,11 +6,6 @@
     <section class="bg-animated">
         <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12">
             <div class="w-full p-6 mx-auto bg-white rounded-lg shadow dark:bg-gray-800 sm:max-w-xl lg:col-span-6 sm:p-8">
-
-                <h1 class="mb-2 text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
-                    Waldenburger Hofflohmärkte
-                </h1>
-
                 <p class="text-sm">
                     <a href="{{ path('index') }}" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">
                         <svg class="w-5 h-5 me-0 text-blue-600 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -21,19 +16,22 @@
                 </p>
 
 
-                {% if isNew %}
-                    <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
-                        Zeitpunkt der Veranstaltung: Freitag, 31. Oktober 2025 (Reformationstag), 10 - 17 Uhr
-                    </p>
+                <h1 class="mb-2 text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
+                    Waldenburger Hofflohmärkte
+                </h1>
 
-                    <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
-                        Adresse des Veranstaltungsorts: Stadtgebiet Waldenburg (08396)
-                    </p>
 
-                    <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
-                        Bei Fragen könnt ihr euch unter hallo@kleinodd.de und im kleinodd - Buch & Café (Markt 13) melden.
-                    </p>
-                {% endif %}
+                <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
+                    Freitag, 31. Oktober 2025 (Reformationstag), 10 - 17 Uhr
+                </p>
+
+                <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
+                    Stadtgebiet Waldenburg (08396)
+                </p>
+
+                <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
+                    Bei Fragen könnt ihr euch unter <a href="mailto:hallo@kleinodd.de" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">hallo@kleinodd.de</a> und im <a href="https://www.kleinodd.de" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">kleinodd - Buch & Café</a> melden.
+                </p>
 
                 {{ form_start(form, {'attr': {'class': 'mt-4 space-y-6 sm:mt-6', 'novalidate': 'novalidate'}}) }}
 
@@ -86,23 +84,6 @@
                 {{ form_end(form) }}
             </div>
             <div class="mr-auto place-self-center lg:col-span-6">
-                <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
-                    Hier sind ein paar Tipps, damit es für dich als Standbetreiber*in ein toller Tag wird:
-                </p>
-
-                <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
-                    Frag' <span class="font-bold">deine Nachbarn</span>, ob sie mitmachen. Zusammen macht es mehr Spaß! (Meldet euch aber bitte nur 1x pro Adresse an!)
-                </p>
-
-
-                <p class="font-light text-gray-500 dark:text-gray-300 mb-4">
-                    Macht mit Luftballons am Zaun o.ä. auf euren Stand aufmerksam.
-                </p>
-
-                <p class="font-light text-gray-500 dark:text-gray-300">
-                    Wenn ihr Muffins backen oder selbstgemachte Limonade anbieten wollt, dürft ihr dies auf Spendenbasis tun.
-                </p>
-
                 <img class="hidden mx-auto lg:flex" src="{{ asset('images/yard-sale.png') }}" alt="illustration">
             </div>
         </div>
