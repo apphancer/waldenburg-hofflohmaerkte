@@ -4,7 +4,8 @@ import {MarkerClusterer} from '@googlemaps/markerclusterer';
 
 export default class extends Controller {
     static values = {
-        apiKey: String
+        apiKey: String,
+        stallsUrl: String
     }
 
     stalls;
@@ -26,7 +27,7 @@ export default class extends Controller {
 
         this.google = await loader.load();
 
-        const response = await fetch('stalls.json');
+        const response = await fetch(this.stallsUrlValue);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

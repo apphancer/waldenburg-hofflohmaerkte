@@ -7,6 +7,7 @@ use App\Form\StallType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -89,5 +90,67 @@ final class StallController extends AbstractController
             'form'    => $form,
             'address' => $stall->getAddress(),
         ]);
+    }
+
+    #[Route('/api/stalls', name: 'app_stall_list', methods: ['GET'])]
+    public function stallsGeoJson(): JsonResponse
+    {
+        /** @var Stall[] $stalls */
+        $stalls = $this->em->getRepository(Stall::class)->findBy(['isPublished' => true]);
+
+        $features = [];
+        foreach ($stalls as $stall) {
+            $addr = $stall->getAddress() ?? [];
+            $lat = $addr['location']['lat'] ?? null;
+            $lng = $addr['location']['lng'] ?? null;
+
+            if ($lat === null || $lng === null) {
+                continue;
+            }
+
+            $addressText = $addr['displayName'] ?? ($addr['formattedAddress'] ?? null);
+            if ($addressText === null && isset($addr['addressComponents']) && is_array($addr['addressComponents'])) {
+                $street = null; $number = null; $city = null; $postal = null;
+                foreach ($addr['addressComponents'] as $component) {
+                    if (!isset($component['types'][0], $component['long_name'])) {
+                        continue;
+                    }
+                    $type = $component['types'][0];
+                    switch ($type) {
+                        case 'route': $street = $component['long_name']; break;
+                        case 'street_number': $number = $component['long_name']; break;
+                        case 'locality': $city = $component['long_name']; break;
+                        case 'postal_code': $postal = $component['long_name']; break;
+                    }
+                }
+                $parts = [];
+                if ($street) {
+                    $parts[] = trim($street . ' ' . ($number ?? ''));
+                }
+                if ($postal || $city) {
+                    $parts[] = trim(($postal ? $postal . ' ' : '') . ($city ?? ''));
+                }
+                $addressText = implode(', ', array_filter($parts));
+            }
+
+            $features[] = [
+                'type' => 'Feature',
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [(float)$lng, (float)$lat],
+                ],
+                'properties' => [
+                    'address' => $addressText ?? '',
+                    'information' => $stall->getInformation(),
+                ],
+            ];
+        }
+
+        $data = [
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        ];
+
+        return $this->json($data);
     }
 }

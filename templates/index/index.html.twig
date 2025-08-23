@@ -58,7 +58,8 @@
     </section>
 
     <section {{ stimulus_controller('map', {
-        'apiKey': google_maps_api_key
+        'apiKey': google_maps_api_key,
+        'stallsUrl' : path('app_stall_list')
     }) }} id="map-container" class="flex-grow flex">
         <div class="sidebar" id="sidebar">
             <div id="listings" class="listings"></div>
