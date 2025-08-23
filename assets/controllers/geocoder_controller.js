@@ -47,7 +47,9 @@ export default class extends Controller {
 
         this.autocomplete = new google.maps.places.PlaceAutocompleteElement({
             includedRegionCodes: ['de'],
-            locationRestriction: locationRestriction
+            locationRestriction: locationRestriction,
+            types: ['address']
+
         });
 
         this.geocoderTarget.appendChild(this.autocomplete);
@@ -76,9 +78,23 @@ export default class extends Controller {
         await place.fetchFields({
             fields: ['displayName', 'formattedAddress', 'location', 'addressComponents']
         });
+
+        // First set the value
         this.resultTarget.value = JSON.stringify(place, null, 2);
 
-        this.placeholderHideOverlay()
+        // Then parse it for validation
+        const placeData = JSON.parse(this.resultTarget.value);
+        const hasStreetNumber = placeData.addressComponents?.some(component =>
+            component.types && component.types.includes('street_number')
+        );
+
+        if (!hasStreetNumber) {
+            alert('Bitte wählen Sie eine vollständige Adresse mit Hausnummer aus.');
+            this.resultTarget.value = '';
+            return;
+        }
+
+        this.placeholderHideOverlay();
 
     }
 

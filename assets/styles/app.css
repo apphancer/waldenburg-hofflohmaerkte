@@ -8,15 +8,15 @@
         font-family: 'Inter', sans-serif;
     }
 }
-html, body {
-    height: 100%;
-    margin: 0;
-}
+/*html, body {*/
+/*    height: 100%;*/
+/*    margin: 0;*/
+/*}*/
 
-body {
-    display: flex;
-    flex-direction: column;
-}
+/*body {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
 
 .bg-white.dark\:bg-gray-900 {
     flex-shrink: 0; /* Section 1 takes its natural height */
