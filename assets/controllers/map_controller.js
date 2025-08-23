@@ -48,7 +48,7 @@ export default class extends Controller {
     }
 
     initMap() {
-        const zoomLevel = window.innerWidth < 1000 ? 13 : 14;
+        const zoomLevel = window.innerWidth < 1000 ? 14 : 15;
 
         const center = {
             lat: 50.874460,
