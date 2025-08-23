@@ -3,10 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Stall;
+use App\Repository\StallRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -23,6 +23,10 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class StallType extends AbstractType
 {
+    public function __construct(private readonly StallRepository $stallRepository)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -138,6 +142,24 @@ class StallType extends AbstractType
         $this->validateCoordinates($data, $context);
         $this->validateAddressComponents($data, $context);
 
+        // Duplicate address check based on formattedAddress
+        $formattedAddress = $data['formattedAddress'] ?? null;
+        if (is_string($formattedAddress) && trim($formattedAddress) !== '') {
+            // Exclude current entity (useful when editing)
+            $root = $context->getRoot();
+            $currentId = null;
+            if (method_exists($root, 'getData')) {
+                $rootData = $root->getData();
+                if ($rootData instanceof Stall) {
+                    $currentId = $rootData->getId();
+                }
+            }
+
+            if ($this->stallRepository->existsByFormattedAddress($formattedAddress, $currentId)) {
+                $context->buildViolation('Diese Adresse wurde bereits registriert.')
+                    ->addViolation();
+            }
+        }
     }
 
 

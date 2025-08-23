@@ -16,28 +16,41 @@ class StallRepository extends ServiceEntityRepository
         parent::__construct($registry, Stall::class);
     }
 
-    //    /**
-    //     * @return Stall[] Returns an array of Stall objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Checks if any Stall exists with the given formattedAddress in its JSON address field.
+     * This is implemented in PHP for portability across DB platforms.
+     */
+    public function existsByFormattedAddress(string $formattedAddress, ?int $excludeId = null): bool
+    {
+        $formattedAddress = trim($formattedAddress);
+        if ($formattedAddress === '') {
+            return false;
+        }
 
-    //    public function findOneBySomeField($value): ?Stall
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        // Fetch candidates. To keep it simple and portable, we fetch all and filter in PHP.
+        // If the dataset grows, consider adding a dedicated column or DB-specific JSON query.
+        $qb = $this->createQueryBuilder('s');
+        if ($excludeId !== null) {
+            $qb->andWhere('s.id != :excludeId')->setParameter('excludeId', $excludeId);
+        }
+        /** @var Stall[] $stalls */
+        $stalls = $qb->getQuery()->getResult();
+
+        $needle = mb_strtolower($formattedAddress);
+        foreach ($stalls as $stall) {
+            $addr = $stall->getAddress();
+            if (!is_array($addr)) {
+                continue;
+            }
+            $candidate = $addr['formattedAddress'] ?? null;
+            if (!is_string($candidate)) {
+                continue;
+            }
+            if (mb_strtolower(trim($candidate)) === $needle) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
