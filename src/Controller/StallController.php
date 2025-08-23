@@ -142,6 +142,7 @@ final class StallController extends AbstractController
                 'properties' => [
                     'address' => $addressText ?? '',
                     'information' => $stall->getInformation(),
+                    'stallNumber' => $stall->getStallNumber(),
                 ],
             ];
         }

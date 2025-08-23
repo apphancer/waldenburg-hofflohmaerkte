@@ -11,6 +11,7 @@ export default class extends Controller {
     stalls;
     map;
     markers = [];
+    clusterMarkers = [];
     markerClusterer;
     sidebar;
     infoWindow;
@@ -129,38 +130,66 @@ export default class extends Controller {
     }
 
     addMarkers() {
+        const metersToLat = (m) => m / 111320; // approx meters per degree latitude
+        const metersToLng = (m, lat) => m / (111320 * Math.cos(lat * Math.PI / 180));
+
         for (const stall of this.stalls.features) {
-            const position = {
+            const base = {
                 lat: stall.geometry.coordinates[1],
                 lng: stall.geometry.coordinates[0]
             };
 
-            const marker = new this.google.maps.Marker({
-                position: position,
-                map: this.map,
-                title: stall.properties.address,
-                icon: {
-                    url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='44' viewBox='0 0 384 512'%3E%3Cpath fill='%23D114B3' d='M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z'/%3E%3C/svg%3E",
-                    scaledSize: new this.google.maps.Size(32, 44),
-                    anchor: new this.google.maps.Point(16, 44)
+            const count = Math.max(1, Number(stall.properties.stallNumber) || 1);
 
+            // Compute positions: if more than 1, distribute on a small circle ~5m radius
+            let positions = [];
+            if (count === 1) {
+                positions = [base];
+            } else {
+                const radiusM = 5; // ~5 meters
+                const dLat = metersToLat(radiusM);
+                const dLng = metersToLng(radiusM, base.lat);
+                for (let k = 0; k < count; k++) {
+                    const angle = (2 * Math.PI * k) / count; // even distribution
+                    const lat = base.lat + dLat * Math.sin(angle);
+                    const lng = base.lng + dLng * Math.cos(angle);
+                    positions.push({ lat, lng });
+                }
+            }
+
+            positions.forEach((pos, idx) => {
+                const marker = new this.google.maps.Marker({
+                    position: pos,
+                    map: this.map,
+                    title: stall.properties.address,
+                    icon: {
+                        url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='44' viewBox='0 0 384 512'%3E%3Cpath fill='%23D114B3' d='M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z'/%3E%3C/svg%3E",
+                        scaledSize: new this.google.maps.Size(32, 44),
+                        anchor: new this.google.maps.Point(16, 44)
+                    }
+                });
+
+                // share the same stall info for all markers
+                marker.properties = stall.properties;
+
+                marker.addListener('click', () => {
+                    this.flyToStore(marker);
+                    this.createPopUp(marker);
+                });
+
+                // first marker is the representative one used in the sidebar list
+                if (idx === 0) {
+                    this.markers.push(marker);
                 }
 
+                // all markers participate in clustering
+                this.clusterMarkers.push(marker);
             });
-
-            marker.properties = stall.properties;
-
-            marker.addListener('click', () => {
-                this.flyToStore(marker);
-                this.createPopUp(marker);
-            });
-
-            this.markers.push(marker);
         }
 
         this.markerClusterer = new MarkerClusterer({
             map: this.map,
-            markers: this.markers,
+            markers: this.clusterMarkers,
             renderer: {
                 render: ({ count, position }) => {
                     const marker = new this.google.maps.Marker({
