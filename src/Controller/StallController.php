@@ -42,10 +42,14 @@ final class StallController extends AbstractController
             return $this->redirectToRoute('app_stall_success', ['uuid' => $stall->getPrivateUuid()]);
         }
 
+        if($form->isSubmitted() && !$form->isValid()) {
+            $address = $form->get('address')->getData();
+        }
+
         return $this->render('stall/index.html.twig', [
             'isNew'   => true,
             'form'    => $form,
-            'address' => null,
+            'address' => $address ?? null,
         ]);
     }
 
