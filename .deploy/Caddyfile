@@ -1,7 +1,7 @@
-http://waldenburghofmarkt.kleinodd.de {
+http://waldenburg-hofflohmaerkte.kleinodd.de {
     redir https://{host}{uri}
 }
 
-https://waldenburghofmarkt.kleinodd.de {
-    reverse_proxy waldenburghofmarkt-V-php-1:80
+https://waldenburg-hofflohmaerkte.kleinodd.de {
+    reverse_proxy whfm-V-php-1:80
 }

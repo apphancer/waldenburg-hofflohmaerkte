@@ -16,7 +16,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,23 +42,6 @@ jobs:
         env:
           APP_ENV: dev
 
-
-      #
-      #            -   name: Prepare test DB
-      #                run: bin/console doctrine:database:drop --force && bin/console doctrine:database:create && bin/console doctrine:schema:create && bin/console doctrine:fixtures:load --group=assets --no-interaction
-      #                env:
-      #                    APP_ENV: test
-      #
-      #            -   name: PHPUnit
-      #                run: php ./vendor/bin/phpunit --log-junit ~/phpunit/junit.xml
-      #                env:
-      #                    SYMFONY_PHPUNIT_VERSION: 7.5
-      #                    SYMFONY_DEPRECATIONS_HELPER: weak
-
-
-      # Before first deployment, run
-      # git clone
-      # create .env.local
   deploy:
     name: Deploy
     needs: prepare-deployment
