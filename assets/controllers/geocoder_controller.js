@@ -36,6 +36,7 @@ export default class extends Controller {
         const loader = new Loader({
             apiKey: this.apiKeyValue,
             version: 'weekly',
+            libraries: ['marker'],
         });
 
         this.google = await loader.load();
