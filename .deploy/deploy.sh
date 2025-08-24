@@ -18,7 +18,6 @@ echo "$VERSION"
 # Clean up unnecessary files and copy environment file
 #rm -rf tests # do not delete here as this would cause issues with git checkout. Instead delete inside container
 
-
 sudo chown -R www-data /var/www/$PROJECT
 sudo chgrp -R www-data /var/www/$PROJECT
 
