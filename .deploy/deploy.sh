@@ -5,12 +5,15 @@ set -o errexit
 
 # Setup the variables
 VERSION=${VERSION:?Missing VERSION environment variable}
-CONTAINER_NAME=whfm
+PROJECT=whfm
+SERVICE=php-1
 
 # Transform '.' into '-' in VERSION for tagging purposes
 VERSION=$(echo $VERSION | tr '.' '-')
+CONTAINER_NAME="${PROJECT}-${VERSION}-${SERVICE}"
 
-echo $VERSION
+echo "$VERSION"
+
 
 # Clean up unnecessary files and copy environment file
 #rm -rf tests # do not delete here as this would cause issues with git checkout. Instead delete inside container
@@ -20,17 +23,17 @@ sudo chown -R www-data /var/www/$CONTAINER_NAME
 sudo chgrp -R www-data /var/www/$CONTAINER_NAME
 
 # Start docker containers
-docker compose -p "${CONTAINER_NAME}-${VERSION}" -f deploy/docker-compose.prod.yml up --build --no-start
-docker compose -p "${CONTAINER_NAME}-${VERSION}" -f deploy/docker-compose.prod.yml up -d
+docker compose -p "${PROJECT}-${VERSION}" -f .deploy/docker-compose.prod.yml up --build --no-start
+docker compose -p "${PROJECT}-${VERSION}" -f .deploy/docker-compose.prod.yml up -d
 
 # Deployment tasks
-docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" composer install --no-scripts --no-dev --optimize-autoloader
-docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" composer dump-env prod
-docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" bin/console cache:clear --no-warmup --no-debug
-docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" bin/console cache:warmup
-docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" php bin/console importmap:install
-docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" php bin/console tailwind:build
-docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" php bin/console asset-map:compile
+docker exec -u www-data "${CONTAINER_NAME}" composer install --no-scripts --no-dev --optimize-autoloader
+docker exec -u www-data "${CONTAINER_NAME}" composer dump-env prod
+docker exec -u www-data "${CONTAINER_NAME}" bin/console cache:clear --no-warmup --no-debug
+docker exec -u www-data "${CONTAINER_NAME}" bin/console cache:warmup
+docker exec -u www-data "${CONTAINER_NAME}" php bin/console importmap:install
+docker exec -u www-data "${CONTAINER_NAME}" php bin/console tailwind:build
+docker exec -u www-data "${CONTAINER_NAME}" php bin/console asset-map:compile
 
 # Update Caddy
 cp deploy/Caddyfile /var/www/server/sites/$CONTAINER_NAME
