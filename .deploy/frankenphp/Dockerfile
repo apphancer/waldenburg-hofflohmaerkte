@@ -1,6 +1,6 @@
 FROM dunglas/frankenphp:1.7-php8.4-bookworm
 
-ENV SERVER_NAME=waldenburghofmarkt.kleinodd.de:80
+ENV SERVER_NAME=waldenburg-hofflohmaerkte.kleinodd.de:80
 
 # Perform system-level operations as root
 USER root

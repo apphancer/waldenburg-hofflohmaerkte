@@ -5,7 +5,7 @@ set -o errexit
 
 # Setup the variables
 VERSION=${VERSION:?Missing VERSION environment variable}
-CONTAINER_NAME=waldenburghofmarkt
+CONTAINER_NAME=whfm
 
 # Transform '.' into '-' in VERSION for tagging purposes
 VERSION=$(echo $VERSION | tr '.' '-')
@@ -35,7 +35,7 @@ docker exec -u www-data "${CONTAINER_NAME}-${VERSION}-php-1" php bin/console ass
 # Update Caddy
 cp deploy/Caddyfile /var/www/server/sites/$CONTAINER_NAME
 cd /var/www/server
-SITE_NAME=waldenburghofmarkt NEW_VERSION=$VERSION ./src/update-site.sh
+SITE_NAME=whfm NEW_VERSION=$VERSION ./src/update-site.sh
 ./src/build-config.sh
 docker compose restart
 
@@ -51,3 +51,6 @@ xargs -n1 docker rm
 docker system prune --volumes -f
 docker volume ls -qf dangling=true | xargs -r docker volume rm
 docker image prune -a -f
+
+# Create a RELEASE file
+echo "$CONTAINER_NAME" > /var/www/$PROJECT/.deploy/RELEASE
