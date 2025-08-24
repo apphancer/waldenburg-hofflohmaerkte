@@ -75,5 +75,5 @@ jobs:
                 exit 1
             fi
             sudo -u www-data git checkout -f $VERSION
-            chmod +x ./deploy/deploy.sh
-            ./deploy/deploy.sh
+            chmod +x ./.deploy/deploy.sh
+            ./.deploy/deploy.sh
