@@ -2,7 +2,7 @@ services:
   php:
     build:
       context: ..
-      dockerfile: ./deploy/frankenphp/Dockerfile
+      dockerfile: ./.deploy/frankenphp/Dockerfile
     restart: always
     volumes:
       - ../:/app
