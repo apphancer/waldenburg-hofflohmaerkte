@@ -19,8 +19,8 @@ echo "$VERSION"
 #rm -rf tests # do not delete here as this would cause issues with git checkout. Instead delete inside container
 
 
-sudo chown -R www-data /var/www/$CONTAINER_NAME
-sudo chgrp -R www-data /var/www/$CONTAINER_NAME
+sudo chown -R www-data /var/www/$PROJECT
+sudo chgrp -R www-data /var/www/$PROJECT
 
 # Start docker containers
 docker compose -p "${PROJECT}-${VERSION}" -f .deploy/docker-compose.prod.yml up --build --no-start
@@ -36,16 +36,16 @@ docker exec -u www-data "${CONTAINER_NAME}" php bin/console tailwind:build
 docker exec -u www-data "${CONTAINER_NAME}" php bin/console asset-map:compile
 
 # Update Caddy
-cp deploy/Caddyfile /var/www/server/sites/$CONTAINER_NAME
+cp .deploy/Caddyfile /var/www/server/sites/$PROJECT
 cd /var/www/server
-SITE_NAME=whfm NEW_VERSION=$VERSION ./src/update-site.sh
+SITE_NAME=$PROJECT NEW_VERSION=$VERSION SERVICE=$SERVICE ./src/update-site.sh
 ./src/build-config.sh
 docker compose restart
 
 # Remove old containers
 docker ps -a --format "{{.ID}}:{{.Names}}" |
-grep -E "${CONTAINER_NAME}-v[0-9]+-[0-9]+-[0-9]+-php-1" |
-grep -v "${CONTAINER_NAME}-${VERSION}-php-1" |
+grep -E "${PROJECT}-v[0-9]+-[0-9]+-[0-9]+-${SERVICE}" |
+grep -v "$CONTAINER_NAME" |
 awk -F":" '{print $1}' |
 xargs -n1 docker stop |
 xargs -n1 docker rm
