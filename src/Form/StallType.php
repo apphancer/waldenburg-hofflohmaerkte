@@ -31,6 +31,7 @@ class StallType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'label'       => 'E-Mail',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter an email address',
@@ -41,6 +42,7 @@ class StallType extends AbstractType
                 ],
             ])
             ->add('fullName', TextType::class, [
+                'label'       => 'Name',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter your full name',
@@ -62,6 +64,7 @@ class StallType extends AbstractType
                 ],
             ])
             ->add('stallNumber', IntegerType::class, [
+                'label'       => 'Wie viele Stände?',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a stall number',
@@ -97,7 +100,7 @@ class StallType extends AbstractType
                         'message' => 'You must agree to our terms and privacy policy.',
                     ]),
                 ],
-                'label'       => 'I agree to the terms of service and privacy policy',
+                'label'       => 'Ich stimme der Datenschutzerklärung zu.',
                 'required'    => true,
             ]);
 
