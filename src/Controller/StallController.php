@@ -6,17 +6,20 @@ use App\Entity\Stall;
 use App\Form\StallType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Ulid;
 
 final class StallController extends AbstractController
 {
 
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly MailerInterface $mailer)
     {
     }
 
@@ -37,6 +40,8 @@ final class StallController extends AbstractController
 
             $this->em->persist($stall);
             $this->em->flush();
+
+            $this->sendEmail($stall);
 
             $this->addFlash('success', 'Your stall registration has been submitted successfully!');
 
@@ -153,5 +158,18 @@ final class StallController extends AbstractController
         ];
 
         return $this->json($data);
+    }
+
+    private function sendEmail(Stall $stall): void
+    {
+        $email = new NotificationEmail()
+            ->from(new Address($_ENV['EMAIL_FROM_ADDRESS'], $_ENV['EMAIL_FROM_NAME']))
+            ->to($stall->getEmail())
+            ->subject('Waldenburger Hofflohmärkte 2025')
+            ->htmlTemplate('email.html.twig')
+            ->importance('')
+            ->context(['stall' => $stall]);
+
+        $this->mailer->send($email);
     }
 }
