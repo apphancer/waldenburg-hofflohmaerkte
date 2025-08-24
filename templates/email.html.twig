@@ -1,0 +1,38 @@
+{% extends '@email/default/notification/body.html.twig' %}
+
+{% block content %}
+    <h1>Hallo {{ stall.fullName }},</h1>
+
+    <p>vielen Dank für deine Anmeldung deines Standes unter der Adresse <strong>{{ stall.address.displayName }}</strong> für die Waldenburger Hofflohmärkte 2025.</p>
+
+    <p><strong>Termin:</strong> Freitag, 31. Oktober 2025 (Reformationstag), 10 - 17 Uhr</p>
+
+    <p>Bitte beachte, dass deine Eingabe derzeit überprüft wird und noch nicht verarbeitet wurde.</p>
+
+    <p>Wir empfehlen, in Kürze erneut nach Updates zu schauen.</p>
+
+    <p>Um weitere Änderungen vorzunehmen, nutze bitte die folgende URL:<br>
+        <a href="{{ url('app_stall_edit', {uuid: stall.privateUuid}) }}">{{ url('app_stall_edit', {uuid: stall.privateUuid}) }}</a></p>
+
+    <h2>Tipps für einen tollen Tag als Standbetreiber*in</h2>
+
+    <p>🤝 Frag deine Nachbarn, ob sie mitmachen. Zusammen macht es mehr Spaß! (Ändere dafür einfach die Anzahl der Stände an deiner Adresse.)</p>
+
+    <p>🎈 Macht mit Luftballons am Zaun o.ä. auf euren Stand aufmerksam.</p>
+
+    <p>🧁 Wenn ihr Muffins backen oder selbstgemachte Limonade anbieten wollt, dürft ihr dies auf Spendenbasis tun.</p>
+
+    <p>Bei Fragen könnt ihr euch unter <a href="mailto:hallo@kleinodd.de">hallo@kleinodd.de</a> und im kleinodd - Buch &amp; Café melden.</p>
+{% endblock %}
+
+{% block footer %}
+    <row>
+        <columns small="12" large="6">
+            {% block footer_content %}
+                <p class="footer">
+                    <small>Kleinodd | Markt 13, 08396 Waldenburg</small>
+                </p>
+            {% endblock %}
+        </columns>
+    </row>
+{% endblock %}

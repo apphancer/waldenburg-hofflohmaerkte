@@ -34,10 +34,10 @@ class StallType extends AbstractType
                 'label'       => 'E-Mail',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an email address',
+                        'message' => 'Bitte geben Sie eine E-Mail-Adresse ein',
                     ]),
                     new Email([
-                        'message' => 'Please enter a valid email address',
+                        'message' => 'Bitte geben Sie eine gültige E-Mail-Adresse ein',
                     ]),
                 ],
             ])
@@ -45,7 +45,7 @@ class StallType extends AbstractType
                 'label'       => 'Name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your full name',
+                        'message' => 'Bitte geben Sie Ihren vollständigen Namen ein',
                     ]),
                 ],
             ])
@@ -67,7 +67,7 @@ class StallType extends AbstractType
                 'label'       => 'Wie viele Stände?',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a stall number',
+                        'message' => 'Bitte geben Sie eine Standnummer ein',
                     ]),
                 ],
                 'data'        => 1,
@@ -78,7 +78,7 @@ class StallType extends AbstractType
             ->add('address', HiddenType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Location data is required',
+                        'message' => 'Standortdaten sind erforderlich',
                     ]),
                     new Callback([
                         'callback' => [$this, 'validateLocationData'],
@@ -97,7 +97,7 @@ class StallType extends AbstractType
                 'mapped'      => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You must agree to our terms and privacy policy.',
+                        'message' => 'Sie müssen unseren Nutzungsbedingungen und der Datenschutzerklärung zustimmen',
                     ]),
                 ],
                 'label'       => 'Ich stimme der Datenschutzerklärung zu.',
@@ -136,7 +136,7 @@ class StallType extends AbstractType
         $data = is_array($value) ? $value : json_decode($value, true);
 
         if (!is_array($value) && json_last_error() !== JSON_ERROR_NONE) {
-            $context->buildViolation('Location must be in valid JSON format')
+            $context->buildViolation('Standortdaten sind erforderlich')
                 ->addViolation();
             return;
         }
@@ -169,7 +169,7 @@ class StallType extends AbstractType
     private function validateRequiredFields(array $data, ExecutionContextInterface $context): void
     {
         if (!isset($data['id']) || empty($data['id'])) {
-            $context->buildViolation('Location ID is required')
+            $context->buildViolation('Standortdaten sind erforderlich')
                 ->addViolation();
         }
     }
@@ -180,7 +180,7 @@ class StallType extends AbstractType
             || !isset($data['location']['lat'])
             || !isset($data['location']['lng'])
         ) {
-            $context->buildViolation('Location coordinates are required')
+            $context->buildViolation('Standortkoordinaten sind erforderlich')
                 ->addViolation();
         }
     }
@@ -188,7 +188,7 @@ class StallType extends AbstractType
     private function validateAddressComponents(array $data, ExecutionContextInterface $context): void
     {
         if (!isset($data['addressComponents']) || !is_array($data['addressComponents'])) {
-            $context->buildViolation('Address components are missing or invalid')
+            $context->buildViolation('Adresskomponenten fehlen oder sind ungültig')
                 ->addViolation();
 
             return;
