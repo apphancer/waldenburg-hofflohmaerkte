@@ -26,6 +26,8 @@ final class StallController extends AbstractController
     #[Route('/stall/create', name: 'app_stall_create')]
     public function create(Request $request): Response
     {
+        throw $this->createAccessDeniedException();
+
         $stall = new Stall();
 
         $form = $this->createForm(StallType::class, $stall);
@@ -74,6 +76,9 @@ final class StallController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['uuid' => 'privateUuid'])] Stall $stall
     ): Response {
+
+        return $this->redirectToRoute('index');
+
         $form = $this->createForm(StallType::class, $stall);
         $form->handleRequest($request);
 
