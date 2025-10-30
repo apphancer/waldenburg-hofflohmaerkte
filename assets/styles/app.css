@@ -289,3 +289,9 @@ h1 {
     background: #43E8BE;
     background: linear-gradient(90deg,rgba(67, 232, 190, 1) 0%, rgba(67, 232, 190, 1) 0%, rgba(113, 226, 162, 1) 100%);
 }
+
+
+
+#map {
+    touch-action: manipulation;
+}

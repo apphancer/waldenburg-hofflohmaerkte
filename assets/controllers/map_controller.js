@@ -60,7 +60,7 @@ export default class extends Controller {
         this.map = new this.google.maps.Map(document.getElementById('map'), {
             center: center,
             zoom: zoomLevel,
-            gestureHandling: 'cooperative',
+            gestureHandling: 'greedy',
             mapTypeControl: false,
             styles: [
                 {
